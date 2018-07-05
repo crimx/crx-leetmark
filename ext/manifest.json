@@ -7,7 +7,7 @@
   "short_name": "Leetmark",
   "description": "Converts a Leetcode problem page into Github Flavored Markdown",
 
-  "version": "0.1.0",
+  "version": "0.1.1",
   "update_url": "https://clients2.google.com/service/update2/crx",
 
   "icons": {

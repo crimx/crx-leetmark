@@ -73,6 +73,8 @@ function renderMarkdown () {
   let footer = '*Template generated via [Leetmark](https://github.com/crimx/crx-leetmark).*\n\n'
 
   $textarea.value = frontMatter + content + footer
+  $textarea.focus()
+  $textarea.select()
 }
 
 function renderJSON () {
@@ -86,6 +88,8 @@ function renderJSON () {
 
   try {
     $textarea.value = JSON.stringify(meta, null, '  ')
+    $textarea.focus()
+    $textarea.select()
   } catch (e) {
     console.warn(e)
   }
