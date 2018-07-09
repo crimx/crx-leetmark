@@ -15,4 +15,4 @@ Meta data is stored as Front Matter from which Github will generate a neat data 
 
 Additional JSON data export.
 
-See [sample.md](sample.md) for template example.
+See [sample.md](sample.md) or [my solutions repo](https://github.com/crimx/leetcope) for example.
