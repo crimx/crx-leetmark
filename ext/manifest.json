@@ -18,7 +18,8 @@
     {
       "js": ["content.js"],
       "matches": [
-        "https://*.leetcode.com/problems/*"
+        "https://*.leetcode.com/problems/*",
+        "https://*.leetcode-cn.com/problems/*"
       ]
     }
   ],
@@ -37,6 +38,7 @@
   },
 
   "permissions": [
-    "https://*.leetcode.com/*"
+    "https://*.leetcode.com/*",
+    "https://*.leetcode-cn.com/*"
   ]
 }
