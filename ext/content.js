@@ -8,32 +8,38 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 })
 
-function extract () {
+function extract() {
   return {
     title: extractTitle(),
     href: window.location.href,
     problem: extractProblem(),
     difficulty: extractDifficulty(),
-    topics: extractTags('tags-topics'),
-    questions: extractTags('tags-question'),
+    topics: extractTags('[class^=topic-tag__]'),
+    questions: extractTags('[class^=question__] [class^=title__]')
   }
 }
 
 /**
  * @return {string}
  */
-function extractTitle () {
-  const $title = document.querySelector('h3')
-  if (!$title) { return '' }
+function extractTitle() {
+  const $title = document.querySelector('#question-title')
+  if (!$title) {
+    return ''
+  }
   return ($title.textContent || '').trim()
 }
 
 /**
  * @return {string}
  */
-function extractProblem () {
-  const $desp = document.querySelector('.question-description__3U1T')
-  if (!$desp) { return '' }
+function extractProblem() {
+  const $desp = document.querySelector(
+    '[data-key=description-content] [class^=content__]'
+  )
+  if (!$desp) {
+    return ''
+  }
 
   const $problem = document.createElement('div')
   $problem.innerHTML = $desp.innerHTML
@@ -43,13 +49,17 @@ function extractProblem () {
     const content = ($el.textContent || '').trim()
     $el.outerHTML = content ? `\n\n\`\`\`\n${content}\n\`\`\`\n\n` : ''
   })
-
-  $problem.querySelectorAll('strong').forEach($el => {
+  ;[
+    ...$problem.querySelectorAll('strong'),
+    ...$problem.querySelectorAll('b')
+  ].forEach($el => {
     const content = ($el.textContent || '').trim()
     $el.outerHTML = content ? `**${content}**` : ''
   })
-
-  $problem.querySelectorAll('em').forEach($el => {
+  ;[
+    ...$problem.querySelectorAll('em'),
+    ...$problem.querySelectorAll('i')
+  ].forEach($el => {
     const content = ($el.textContent || '').trim()
     $el.outerHTML = content ? `*${content}*` : ''
   })
@@ -61,10 +71,13 @@ function extractProblem () {
 
   $problem.querySelectorAll('a').forEach($el => {
     const content = ($el.textContent || '').trim()
-    const href = ($el.getAttribute('href') || '').replace(/^\//, 'https://leetcode.com/')
+    const href = ($el.getAttribute('href') || '').replace(
+      /^\//,
+      'https://leetcode.com/'
+    )
     $el.outerHTML = `[${content}](${href})`
   })
-  
+
   $problem.querySelectorAll('ul').forEach($ul => {
     let content = ''
     $ul.querySelectorAll(':scope > li').forEach($li => {
@@ -75,13 +88,13 @@ function extractProblem () {
     })
     $ul.outerHTML = content
   })
-  
+
   $problem.querySelectorAll('ol').forEach($ol => {
     let content = ''
     $ol.querySelectorAll(':scope > li').forEach(($li, i) => {
       const liContent = ($li.textContent || '').trim()
       if (liContent) {
-        content += `${i+1}. ${liContent}\n`
+        content += `${i + 1}. ${liContent}\n`
       }
     })
     $ol.outerHTML = content
@@ -103,29 +116,27 @@ function extractProblem () {
 /**
  * @return {string}
  */
-function extractDifficulty () {
-  const $difficulty = document.querySelector('.difficulty-label')
-  if (!$difficulty) { return '' }
+function extractDifficulty() {
+  const $difficulty = document.querySelector('[diff]')
+  if (!$difficulty) {
+    return ''
+  }
   return ($difficulty.textContent || '').trim()
 }
 
 /**
- * @param {string} tagid
+ * @param {string} selector
  * @return {Array.<{{ title: string, href: string }}>}
  */
-function extractTags (tagid) {
-  const result = []
-  const $topics = document.getElementById(tagid)
-
-  if ($topics) {
-    $topics.querySelectorAll('a').forEach($a => {
+function extractTags(selector) {
+  return [...document.querySelectorAll(selector)]
+    .map($a => {
       const title = ($a.textContent || '').trim()
-      const href = ($a.getAttribute('href') || '').replace(/^\//, 'https://leetcode.com/')
-      if (title && href) {
-        result.push({ title, href })
-      }
+      const href = ($a.getAttribute('href') || '').replace(
+        /^\//,
+        'https://leetcode.com/'
+      )
+      return title && href ? { title, href } : null
     })
-  }
-
-  return result
+    .filter(Boolean)
 }
