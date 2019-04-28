@@ -7,7 +7,7 @@
   "short_name": "Leetmark",
   "description": "Converts a Leetcode problem page into Github Flavored Markdown",
 
-  "version": "0.2.0",
+  "version": "0.4.0",
   "update_url": "https://clients2.google.com/service/update2/crx",
 
   "icons": {
@@ -37,8 +37,5 @@
     "default_popup": "popup.html"
   },
 
-  "permissions": [
-    "https://*.leetcode.com/*",
-    "https://*.leetcode-cn.com/*"
-  ]
+  "permissions": ["https://*.leetcode.com/*", "https://*.leetcode-cn.com/*"]
 }
